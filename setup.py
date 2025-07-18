@@ -8,4 +8,9 @@ setup(
     description="Personal Utility Set",
     url="https://github.com/Fitzgera1d/mutils",
     install_requires=open("requirements.txt").read().splitlines(),
+    entry_points={
+        'console_scripts': [
+            'mutils = mutils.__main__:main',
+        ],
+    },
 )

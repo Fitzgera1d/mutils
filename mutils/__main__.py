@@ -1,6 +1,7 @@
 import argparse
 import mutils
 import importlib
+import sys
 from pathlib import Path
 
 def get_module_description(module_name):
@@ -59,18 +60,65 @@ def list_functions():
         for module in sorted(filtered_modules):
             description = get_module_description(module)
             print(f"- {module}: {description}")
-            print(f"  View details: python -m {module} --help")
+            print(f"  View details: mutils {module.replace('mutils.', '')} --help")
             print()
     print("=" * 40)
 
+def run_subcommand(module_name, args):
+    """Run a subcommand by importing the module and calling its main function."""
+    try:
+        # Import the module
+        module = importlib.import_module(module_name)
+        
+        # Check if the module has a main function
+        if hasattr(module, 'main'):
+            # Set sys.argv to the remaining arguments for the subcommand
+            original_argv = sys.argv
+            sys.argv = [module_name] + args
+            
+            try:
+                # Call the main function
+                module.main()
+            finally:
+                # Restore original sys.argv
+                sys.argv = original_argv
+        else:
+            print(f"Error: Module {module_name} does not have a main() function")
+            sys.exit(1)
+            
+    except ImportError as e:
+        print(f"Error: Could not import module {module_name}: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error running {module_name}: {e}")
+        sys.exit(1)
+
 def main():
+    # 检查是否只有 --help 或 -h 参数，没有子命令
+    if len(sys.argv) == 2 and sys.argv[1] in ['--help', '-h']:
+        list_functions()
+        return
+    
     parser = argparse.ArgumentParser(
         description="mutils - Personal Utility Set",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    # no command line arguments, directly call list_functions
-    # args = parser.parse_args()
-    list_functions()
+    
+    # Add subcommand argument
+    parser.add_argument('subcommand', nargs='?', help='Subcommand to run (e.g., video.sample)')
+    parser.add_argument('args', nargs=argparse.REMAINDER, help='Arguments for the subcommand')
+    
+    args = parser.parse_args()
+    
+    if args.subcommand is None:
+        # No subcommand provided, show available functions
+        list_functions()
+    else:
+        # Construct the full module name
+        module_name = f"mutils.{args.subcommand}"
+        
+        # Run the subcommand
+        run_subcommand(module_name, args.args)
 
 if __name__ == "__main__":
     main() 

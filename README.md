@@ -9,5 +9,5 @@ pip install -e .
 ## Usage
 
 ```sh
-python -m mutils
+mutils --help
 ```
