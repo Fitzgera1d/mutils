@@ -45,9 +45,9 @@ def extract_frames(video_path, num_frames, output_dir, prefix="frame_", suffix="
 
 def main():    
     parser = argparse.ArgumentParser(description="Extract evenly sampled frames from video")
-    parser.add_argument('--video', type=str, required=True, help='Input video path')
-    parser.add_argument('--num', type=int, required=True, help='Number of frames to extract')
-    parser.add_argument('--out', type=str, required=True, help='Output directory')
+    parser.add_argument('video', type=str, help='Input video path')
+    parser.add_argument('--num', '-n', type=int, required=True, help='Number of frames to extract')
+    parser.add_argument('--out', '-o', type=str, required=True, help='Output directory')
     parser.add_argument('--prefix', type=str, default='frame_', help='Frame filename prefix (default: frame_)')
     parser.add_argument('--suffix', type=str, default='jpg', help='Frame filename suffix (default: jpg)')
     parser.add_argument('--pad0', type=int, default=6, help='Number of zeros to pad frame numbers (default: 6)')

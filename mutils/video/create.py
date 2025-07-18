@@ -106,8 +106,8 @@ def create_video(image_dir, output_path, fps, start_frame, duration_frames, no_c
 
 def main():
     parser = argparse.ArgumentParser(description='Create a video from an image sequence and perform lossless compression')
-    parser.add_argument('--image_dir', '-i', required=True, help='Directory containing input images')
-    parser.add_argument('--output', '-o', default=None, help='Output video path')
+    parser.add_argument('images', help='Directory containing input images')
+    parser.add_argument('--out', '-o', type=str, default=None, help='Output video path')
     parser.add_argument('--fps', type=int, default=30, help='Frames per second (default: 30)')
     parser.add_argument('--start_frame', '-s', type=int, default=0, help='Start frame index (default: 0)')
     parser.add_argument('--duration_frames', '-d', type=int, default=-1, 

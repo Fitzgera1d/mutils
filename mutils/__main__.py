@@ -19,10 +19,18 @@ def get_module_description(module_name):
 
 def discover_modules_recursive():
     """Recursively scan the mutils package and its subdirectories to discover all Python modules."""
+    # Define folders and files to ignore
+    IGNORE_FOLDERS = {'utils', '__pycache__', '.git', '.vscode', '.idea'}
+    IGNORE_FILES = {'__init__.py', '__main__.py', 'setup.py', 'requirements.txt'}
+    
     modules = []
     def scan_directory(package_path, package_name):
         for item in package_path.iterdir():
             if item.is_dir() and not item.name.startswith('__'):
+                # Skip ignored folders
+                if item.name in IGNORE_FOLDERS:
+                    continue
+                    
                 # Check if there's an __init__.py file
                 init_file = item / '__init__.py'
                 if init_file.exists():
@@ -33,9 +41,15 @@ def discover_modules_recursive():
                     py_files = list(item.glob('*.py'))
                     if py_files:
                         for py_file in py_files:
+                            # Skip ignored files
+                            if py_file.name in IGNORE_FILES:
+                                continue
                             module_name = f"{package_name}.{item.name}.{py_file.stem}"
                             modules.append(module_name)
             elif item.is_file() and item.suffix == '.py' and item.name != '__init__.py':
+                # Skip ignored files
+                if item.name in IGNORE_FILES:
+                    continue
                 # Direct submodule
                 module_name = f"{package_name}.{item.stem}"
                 modules.append(module_name)
