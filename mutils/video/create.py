@@ -117,7 +117,7 @@ def main():
 
     args = parser.parse_args()
 
-    create_video(args.image_dir, args.output, args.fps, args.start_frame, args.duration_frames, args.no_compress)
+    create_video(args.images, args.out, args.fps, args.start_frame, args.duration_frames, args.no_compress)
 
 if __name__ == "__main__":
     main() 
